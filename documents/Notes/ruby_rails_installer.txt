@@ -1,0 +1,50 @@
+ruby language installer: 
+
+	https://www.ruby-lang.org/en/downloads/
+
+railsinstaller.org/en
+
+http://railsinstaller.org/en
+
+
+there are binaries installer called "Ruby Installer" from the "RubyInstaller" 
+
+http://rubyinstaller.org/downloads/
+
+
+// if you want to build from source, you can do the following:
+
+cd c:\temp\ruby
+d:\Share\Tools\ruby\ruby-2.1.0\configure\win32\configure.bat --prefix=/ProgramFiles/ruby-2.1.0
+nmake
+nmake test
+namke install
+
+
+
+// to configure the install (if you have installed the Rails tools)
+RAILS_HOME: C:\Programfiles\RailsInstaller
+PATH = %RAILS_HOME%\Git\cmd;%RAILS_HOME%\Ruby1.9.3\bin;
+
+// to configure the install (if you have installed the source one)
+RAILS_HOME: C:\Programfiles\ruby-2.1.0
+PATH = %RAILS_HOME%\bin;
+
+
+// Eclipse Plugin - RDT
+eclipse RDT Configure ---ruby plugin installation: http://blog.csdn.net/dijason/article/details/8491475
+Using the Ruby Development Tools plug-in for Eclipse: http://www.ibm.com/developerworks/library/os-rubyeclipse/
+
+
+
+http://rubyeclipse.sourceforge.net/nightlyBuild/updateSite/
+
+
+Aptana RadRails: http://www.aptana.com/products/radrails   http://rubyeclipse.sourceforge.net
+
+Ruby Development Tool: http://sourceforge.net/projects/rubyeclipse/
+
+
+Recommended Eclipse Plug-ins: http://ist.berkeley.edu/as-ag/tools/howto/eclipse-plugins.html
+
+Aptana Update Site: http://update1.aptana.org/rails/1.2.1.23268/index.html

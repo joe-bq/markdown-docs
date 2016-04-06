@@ -1,0 +1,23 @@
+1.
+whther you can install Mono alongside with .NET 
+
+Can I install mono alongside .NET? : http://superuser.com/questions/26833/can-i-install-mono-alongside-net
+
+
+
+2.
+
+Xamarin, xamarin is aiming to build some tools for iOS, Android, and Windows with .NET and C#....
+
+
+3. 
+
+Mono download code. 
+
+
+
+Mono for Windows, Gtk#, and XSP: http://download.mono-project.com/archive/3.2.3/windows-installer/mono-3.2.3-gtksharp-2.12.11-win32-0.exe
+
+
+4.
+

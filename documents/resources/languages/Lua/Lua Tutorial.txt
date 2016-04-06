@@ -1,0 +1,24 @@
+the address of the Lua is availabe here:
+
+Lua Tutorial: http://lua-users.org/wiki/LuaTutorial
+
+
+
+
+Lua Org Guide:
+
+http://lua-users.org/wiki/LuaOrgGuide
+
+
+About Lua 
+
+http://www.lua.org/about.html
+
+
+
+why lua: 
+
+
+Lua has been used in many industrial applications (e.g., Adobe's Photoshop Lightroom), with an emphasis on embedded systems (e.g., the Ginga middleware for digital TV in Brazil) and games (e.g., World of Warcraft and Angry Birds). Lua is currently the leading scripting language in games. Lua has a solid reference manual and there are several books about it.
+
+in a simpler word, you can use the Lua as an embeddeed language for configuration and and you can use Lua to dynamically chagne the behavior of program.

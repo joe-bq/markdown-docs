@@ -1,0 +1,28 @@
+1. 
+
+
+what languages do Joe knows 
+
+
+1. C#
+2. Java
+3. C++
+4. C
+5. Scala
+6. F#
+7. Python
+8. Javascript
+9. Objective-C
+10. Perl
+11. Haskell
+12. Batch script 
+13. Visual Basic 
+14. Assembly language
+
+
+what to learn next include the following.
+
+1. Schema
+2. ML
+3. Lua 
+4. Go 

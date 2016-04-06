@@ -1,0 +1,9 @@
+It has been common used that you can change the color of the window according to the recommendeation from the Optic/ccular specialist , and the color to be used is 
+Hue: 85
+Sat: 123
+Lum: 205
+
+and when that is translated to the Hex code, it is 
+#c7edcc
+
+you probably will want to add a plugin called "Change color" to Chrome, which then after enabled, you can use the CTL+SHIFT+G to enable globally 

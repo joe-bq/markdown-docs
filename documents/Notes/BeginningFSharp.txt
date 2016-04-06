@@ -1,0 +1,77 @@
+Reading digests.
+
+Info about the book:
+
+Beginning F#
+Robert Pickering
+
+
+What is F#
+Inside the Preface parts on “What is F#”, it is discussed the family of Functional programming language. 
+
+“Some of the most popular functional languages, including OCaml, Haskell, Lisp, and Scheme, have traditionally been implemented using custom runtimes, which leads to problems such as lack of interoperability. F# is a general-purpose programming language for .NET (a general-purpose runtime) that smoothly integrates all three major programming paradigms”
+
+
+
+Chapter 1:
+Install tools:
+Platform: Windows
+Visual Studio 
+SharpDevelop
+
+Platform: Linux
+Mono
+Interactive: 
+
+Just type “fsi” on the command line
+
+Chapter 3:
+Functional Programming .
+
+Literals, string, byte array, char, bool, int/int32,… sbyte..
+
+Byte array: System.Byte[]: “bytebytebyte”B  
+
+You cannot use lowercase ‘b’:
+> "bytesbytesbytes"b;;
+
+  "bytesbytesbytes"b;;
+  ^^^^^^^^^^^^^^^^^
+
+stdin(20,1): error FS0003: This value is not a function and cannot be applied
+> "bytesbytesbytes"B;;
+val it : byte [] =
+  [|98uy; 121uy; 116uy; 101uy; 115uy; 98uy; 121uy; 116uy; 101uy; 115uy; 98uy;
+    121uy; 116uy; 101uy; 115uy|]
+
+Integers 
+
+> 34s;;
+val it : int16 = 34s
+> 34n;;
+val it : nativeint = 34n
+> 34un;;
+val it : unativeint = 34un
+> 3.0F
+- ;;
+val it : float32 = 3.0f
+> 3474262622571I
+- ;;
+val it : System.Numerics.BigInteger = 3474262622571 {IsEven = false;
+                                                     IsOne = false;
+                                                     IsPowerOfTwo = false;
+                                                     IsZero = false;
+                                                     Sign = 1;}
+> 474262612536171N;;
+
+  3.0F
+  ^^^^^^^^^^^^^^^^
+
+stdin(66,1): error FS0784: This numeric literal requires that a module 'NumericLiteralN' defining functions FromZero, FromOne, FromInt32, FromInt64 and FromString be in scope
+
+•	the notation of how to represent octal, hexadecimal and others are different from that in C#.
+
+•	Also, it has added y,uy,n,I,s?”
+
+Other differences:
+1.	Can contain newline character..

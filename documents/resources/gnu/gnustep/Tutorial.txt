@@ -1,0 +1,19 @@
+--
+
+Tutorial.txt
+
+
+--
+
+in this file, we will examine the GNUstep and programmming mini tutorials..
+
+
+
+
+--
+References:
+GNUstep programming mini tutorials: http://www.gnustep.it/nicola/Tutorials/
+First Steps in GNUstep GUI Programming: NSApplication, NSMenu: http://www.gnustep.it/nicola/Tutorials/FirstGUIApplication/ or http://www.gnustep.it/nicola/Tutorials/index.html
+A GNUstep Programming Tutorial: http://gnustep.made-it.com/GSPT/xml/Tutorial_en.html
+GNUstep appkit: http://www.gnustep.org/resources/documentation/Developer/Gui/ProgrammingManual/AppKit.pdf
+How to Set Up GNUstep for the East Asian Languages: http://www.gnustep.org/resources/documentation/User/Gui/LanguageSetup.html

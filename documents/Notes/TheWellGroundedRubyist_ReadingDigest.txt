@@ -1,0 +1,3099 @@
+Chapter 1:
+
+install ruby 1.9.1/1.9.3??
+
+
+command line to use :
+
+
+irb --simple-prompt
+
+# A comment
+x = 1 # A Comment
+
+
+Variables:
+
+local variable: x, string, __abc__
+Instance :   @age, @last_name
+class variables: @@runing_total
+global variables: $:, $1, $/ 
+
+CONSTANTS:
+Beegin with an uppercase letter: A, String, FirstName, STDIN
+
+Keyword:
+	class, if, __FILE__
+
+	
+METHODS NAMES:
+	(methods may have) ?, !, = , otherwise, it is the same as the local variables.
+
+	
+Sending messages vs. Methods
+
+bareword-style invocation: 
+	message sent to the implicit "self"
+	
+Built-in classes
+	String, Array, Fixnum
+
+Concept of class vs. Concept of object
+	...in Ruby, the class isn't hte sole determinant of what the object can do 
+
+Writing and saving a sample program (whether or not to use some IDE)
+
+Feeding program to Ruby 
+
+	ruby 1_1.rb
+	irb.bat 1_1.rb
+
+	check for syntax: 
+	
+	ruby -cw c2f.rb
+
+Anatomy: 
+	# preload a ruby pacakge 
+	irb --simple-prompt --rrbconfig
+	# request that information
+	Config::CONFIG["bindir"]
+
+	# ruby 2.1
+	RbConfig::CONFIG["bindir"]
+
+	
+Ruby library subdirectory 
+	# 
+	Config::CONFIG["rubylibdir"]
+
+Ruby Extensions Directory: (C Extension)
+	# 
+	Config::CONFIG["archdir"]
+	# Ruby 2.1
+	RbConfig::CONFIG["archdir"]
+	# "c:/ProgramFiles/ruby-2.1.0/lib/ruby/2.1.0/i386-mswin32_100"
+	
+The site_ruby, vendor_ruby (where the 3rd party extensions and libraries)
+
+	>> RbConfig::CONFIG["sitedir"]
+	=> "c:/ProgramFiles/ruby-2.1.0/lib/ruby/site_ruby"
+	>> RbConfig::CONFIG["vendordir"]
+	=> "c:/ProgramFiles/ruby-2.1.0/lib/ruby/vendor_ruby"
+
+The gem directory:
+	The RubyGems utility is the standard way to package and distribute Ruby libraries. When you install gems (as the packages themselves are called), same level as the site_ruby
+
+require and load
+	load: load and run
+	require: do not load a module more than once... (seems not searching the currenct directory)
+
+default loading path:
+	$: load path
+	
+	#to check 
+	ruby -e 'puts $:'
+	
+	will check the current directory searching for loading , seems that "require" does not check the current directory
+	// http://stackoverflow.com/questions/8510981/in-ruby-how-can-i-require-a-file-from-the-current-working-dir
+	
+out-of-the-box ruby tools and applications
+	erb: templating system
+	testrb: high-level tool for use with Ruby test framework
+	ri: ???
+
+Interpreter commandline switches
+	-c : syntax check
+	-w : high level warning
+	-e : execute expression
+	-v : version
+	-l : line mode, new line after every line of output
+	-rname: require the named feature, e.g. -rprofile, -rrbconfig
+	--version: show ruby version information
+
+Expression have a value	
+	>> days = 365
+	=> 365
+	# call to puts has a return value: nil
+	puts "hello"
+	hello
+	=> nil
+
+Interrupting and exiting
+		ctrl-c, ctrl-z: interrupting
+		ctrl-d, exit: to exit
+
+ri and RDoc:
+
+	ri: Ruby index, e.g. ri String#upcase
+	rdoc: generate documents out of the documentation files. -- SimpleMarkup system
+	
+	# for class method, do Class::Method
+Concept of 
+Chapter 2:
+
+1.4.4. rake
+which is a makefile inspired project
+
+# call the following command
+rake admin:clean_tmp
+
+namespace :admin do 
+  desc "Interactively delete all files in C:\Documents and Settings\wangboqi\Local Settings\Temp" 
+  task :clean_tmp do 
+    Dir["C:/Documents and Settings/wangboqi/Local Settings/Temp/*"].each do |f|
+      next unless File.file?(f)
+      print "Delete #{f}? "                       
+      answer = $stdin.gets 
+      case answer 
+      when /^y/ 
+        File.unlink(f)                            
+      when /^q/ 
+        break                                     
+      end 
+    end 
+  end 
+end 
+
+
+# find all tasks
+rake --tasks
+
+you can nest namespace of the tasks as you like , below is the following 
+
+namespace :admin do 
+  namespace :clean do
+    task :tmp do 
+	  #etc .
+	end
+  end
+end 
+
+1.4.5 Installing packages with the gem command
+
+e.g. 
+$gem install rupport
+
+install from local 
+$ gem install /home/me/mygems/ruport-1.4.0.gem
+
+# use the gem command to find not-quite-current version of Hoe, you can do the following  
+
+gem 'hoe', '<1.8.2'
+
+
+2. Objects, Methods, and local variables
+
+In this chapter
+¦ Objects and object-orientation
+¦ Innate vs. learned object capabilities
+¦ Method parameter, argument, and calling
+syntax
+¦ Local variable assignment and usage
+¦ Object references
+
+2.1.2. creating a generic objects 
+
+conceptually, ruby object can learn things that the class does not teach it
+
+2.1.3 methods that takes arguments
+
+def obj.c2f(c)
+  c * 9.0 / 5 + 32
+end
+
+# parameter is optional
+
+def obj.c2f c
+  c * 9.0 / 5 + 32
+end
+
+
+2.1.4 return  values
+
+the last exprssions' value is the return value, or you can explicitly "return"
+
+
+return a,b,c 
+# not a,b,c
+# or construct an array to return as well
+[a,b,c]
+return [a,b,c]
+
+2.1.5   crafting an boject, the behavior
+
+# will show you how to define methods on a single object
+ticket = Object.new
+def ticket.venue
+  "Town Hall"
+end 
+def ticket.performer
+  "Mark Twain"
+end
+def ticket.event
+  "Author's reading"
+end
+def ticket.price
+  5.50
+end
+def ticket.seat
+  "Second Balcony, row J, seat 12"
+end
+def ticket.date
+  "01/02/03"
+end
+
+print "This ticket is for: "
+print ticket.event + ", at "
+print ticket.venue + ", on "
+puts ticket.date + "."
+print "The performer is "
+puts ticket.performer + "."
+print "The seat is "
+print ticket.seat + ", "
+print "and it costs $"
+puts "%.2f." % ticket.price
+
+
+2.2.3 string interoplation
+
+# format is the interoplation operators #{...}
+# string concatenation is done via the '+' operator
+puts "This ticket is for : #{ticket.event}, at #{ticket.venue}." + 
+  "The performer is #{ticket.performer}." +
+  "The seat is #{ticket.seat}, " +
+  "and it costs $#{"%.2f." % ticket.price}"
+
+2.2.4: true or false value 
+
+# better this 
+def ticket.availability_status
+"sold"
+end
+
+# or this?
+def ticket.available?
+	false
+end
+
+
+#everything except the "false" or 'nil" has value "true"
+
+2.3 innate behaviors of an object
+
+# get methods of a new object
+
+p Object.new.methods.sort
+
+
+among all the methods, the following are important:
+
+¦ object_id
+¦ respond_to?
+¦ send (synonym: __send__)
+
+
+## there is a basic object, which has barely nothing in it, comparing that to the generic object that you get back from Object.new
+
+
+2.3.  object_id method
+
+string_1 = "Hello"
+string_2 = "Hello"
+puts "string_1's id is #{string_1.object_id}."
+puts "string_2's id is #{string_2.object_id}."
+
+# object identity vs. ojbect equality comparison
+
+
+2.3.2 respond_to? method
+
+#respond_to is the reflection  or the "introspection"
+
+obj = Object.new
+if obj.respond_to?("talk")
+	obj.talk
+else
+	puts "Sorry, the object doesn't understand the 'talk' message."
+end
+
+
+# when comparing with the python, you can achieve the respond_to with the following code
+
+class Fun:
+  def hello(self):
+    print "hello"
+hasattr(Fun, 'hello')
+callable(fun.hello)
+
+or you can do with the callable(Fun.hello) with exception handlign suite
+
+try:
+  callable(Fun.goodbye)
+except Attribute, e:
+  return false
+
+
+2.3.3. send message (invocation based on reflection)
+
+print "Information desired: "
+request = gets.chomp
+
+if ticket.respond_to?(request)
+  puts ticket.send(request)
+else
+  puts "no such information available"
+end
+
+#note, there are a public_send and __send__ methods
+
+2.4 method arguments.
+ 
+# we will take a look at the "required" and "optional", and "default"
+
+
+2.4.1 required and optional arguments
+
+# -- arbitary number of arguments, (*: asterisk)
+
+def obj.multi_args(*x)
+	puts "I can take zero or more arguments!"
+end
+
+def two_or_more(a,b,*c)
+  puts "I require two or more arguments!"
+  puts "And sure enough, I got: "
+  p a, b, c
+end
+
+
+2.4.2 defualt value argumnet
+
+def default_args(a, b, c = 1)
+  puts "Values of variables: ",a,b,c
+end
+
+2.4.3 order of parmeters and arguments
+
+
+def args_unleashed(a,b=1,*c,d,e)
+  puts "Arguments:"
+  p a,b,c,d,e
+end
+
+# though personally I would like to have the list argument to be in the last position
+
+2.4.2 what you cannot do in an argumnet lists
+
+def broken_args(x, *y, z=1)
+end
+
+
+2.6 Local variables and variables assignent
+
+Local variable names start with a lowercase letter or an underscore and are made up
+of alphanumeric characters and underscores.
+
+x
+_x
+name
+first_name
+plan9
+user_ID
+_
+
+# local variables have scopes
+
+# -- ruby prefers underscores to the camelCase for local variables
+
+
+def say_goodbye
+  x = "goodbye"
+  puts x
+end
+
+def start_here
+  x = "hello"
+  puts x
+  say_goodbye
+  puts "Let's check whether x remained the same:"
+  puts x
+end
+
+start_here
+
+2.6.1
+
+the un-reference : immediate values
+
+# immediate values 
+some object in Ruby are stored in Variables as immediate values. , includes 
+integers
+symbols (which looks like :this)
+special object (true, false, and nil)
+
+
+# some ramification on the immediate values rules 
+x = 1
+x++ # no such operators
+
+2.6.2
+
+2.6.3 References and mehtod argument (show some method to protect object from being changed)
+# duping and freezing objects
+
+def change_string(str)
+	str.replace("New string content!")
+end
+
+s = "Original string content!"
+change_string(s.dup)
+puts s
+
+# freeze one 
+s = "Original string contents!"
+s.freeze
+change_string(s)
+
+# -- clone vs. dup, dup can return a modifiable object, and clone return just as what the object is before 
+
+2.6.4.
+
+Here’s how Ruby decides what it’s seeing when it encounters a plain identifier:
+1 If the identifier is a keyword, it’s a keyword (Ruby has an internal list of these
+and recognizes them).
+2 If there’s an equal sign (=) to the right of the identifier, it’s a local variable
+undergoing an assignment.
+3 Otherwise, the identifier is assumed to be a method call.
+
+
+3. Organizing objects with Classes
+
+in this chapter
+
+¦ Creating multiple objects with classes
+¦ Setting and reading object state
+¦ Automating creation of attribute read and write
+methods
+¦ Class inheritance mechanics
+¦ Syntax and semantics of Ruby constants
+
+3.1. classes and instances
+
+obj = Object.new
+
+
+# classes namea are constants, classes contains collection of mehtod definition, the classes exists (also in most cases) for the purpose of being instantiated: 
+
+class Ticket
+  def event
+    "Canot'r eally be specified here..."
+  end
+end
+
+3.1.1 instance methods
+
+#  Methods of this kind, defined inside a class and intended for use by all instances of the class, are called instance methods.
+
+# instance method
+Class Ticket 
+  def price
+    5.0
+  end
+end
+
+# singleton method
+ticket = new Object
+def ticket.price 
+  5.0 
+end
+
+
+
+3.1.2 overriding methods
+
+class C
+  def m
+    puts "First definition of method m"
+	end
+  def m
+    puts "Second definition of method m"
+  end
+end
+
+
+# second prevail
+
+C.new.m
+
+3.1.3 Reopening classes
+
+# to reopen an object ot make changes
+
+class C
+  # classes code here
+end
+
+class C
+  def y
+  end
+end
+
+
+#real world examples, time.rb has enhancement to the time classes 
+# check the code below.
+
+>> t = Time.new
+=> 2014-01-02 15:18:58 +0800
+>> t.xmlschema
+NoMethodError: undefined method `xmlschema' for 2014-01-02 15:18:58 +0800:Time
+        from (irb):99
+        from C:/ProgramFiles/RailsInstaller/Ruby1.9.3/bin/irb:12:in `<main>'
+>> require "time"
+=> true
+>> t.xmlschema
+=> "2014-01-02T15:18:58+08:00"
+
+3.2  Instance variables and object state
+
+instance variables have the following attributes:
+
+
+class Person
+  def set_name(string)
+    puts "Setting person's name..."
+    @name = string
+  end
+  def get_name
+    puts "Returning the person's name..."
+    @name
+  end
+end
+
+joe = Person.new
+joe.set_name("Joe")
+puts joe.get_name
+
+3.2.1 initializing an object with state (constructor)
+
+class Ticket
+  def initialize(venue, date)
+    @venue = venue
+	@date = date
+  end
+
+  # get the value back 
+  def venue 
+   @venue
+  end
+  
+  def date
+    @date
+  end
+end 
+
+th = ticket.new("Town Hall", "11/12/13"
+cc = ticket.new("Convention Center", "12/13/14"
+
+puts "We've created two tickets."
+puts "The first is for a #{th.venue} event on #{th.date}."
+puts "The second is for an event on #{cc.date} at #{cc.venue}."
+
+3.3 setter method
+
+# better not to use the equal sign (=) method set_name is not nature 
+
+3.3.1 the equal siegn (=) in method name
+
+class Ticket
+  def initialize(venue, date, price) 
+    @venue = venue
+	@date = date
+	@price = price
+  end
+  #etc
+  def price
+    @price
+  end
+  
+  #ugly way 
+  def set_price(amount) 
+    @price =  amount
+  end
+
+  def price=(amount)
+    @price = amount
+  end
+  
+end
+
+ticket = Ticket.new("Town Hall", "11/12/13")
+ticket.set_price(63.00)
+ticket.price=(63.00)
+
+3.3.2 syntactic sugar for assignment methods
+
+ticket.price= 63.00 
+
+
+3.3.3 Setter method unleased
+
+# what you can do with the setter methods?
+
+# you can do the following with the setter methods
+#   data normalization
+#   filter or gate keeper
+
+
+#note, Ruby takes the assignment semantice seriously , 
+
+*** the value of the expression ticket.price = 63.00 is 63.00, even if the ticket= method returns the
+string “Ha ha!”
+
+
+
+3.4 attributes and attr_* method family
+
+An attribute is a property of an object whose value can be read and/or written through
+the object.
+
+3.4.1. Automating the creation of attributes
+
+class Ticket
+  def initialize(venue, date)
+    @venue = venue
+	@date = date 
+  end
+  
+  def price=(price)
+    @price = price
+  end
+  def venue
+    @venue
+  end
+  def date
+    @date
+  end
+  def price
+    @price
+  end
+
+end
+
+# this is very repetive, and ruby has provide shortcut, as follow 
+class Ticket
+  attr_reader :venue, :date, :price
+  #the automatic writer
+  attr_writer :price
+  
+  def initialize(venue, date)
+    @venue = venue
+	@date = date
+  end
+end
+
+# accessor: both has the reader and writer
+
+class Ticket
+  attr_reader :venue, :date
+  attr_accessor :price
+  def initialize(venue, date)
+    @venue = venue
+	@date = date
+  end
+end
+
+
+# anonym called 'attr'
+
+attr :price, true
+
+3.4.2 Summary of attr_* methods
+
+3.5. inheritance  and the Ruby class hierarchy
+
+# inheritance is the is-a relationship
+
+class Publication
+  attr_accessor :publisher
+end
+
+class Magazine < Publication
+  attr_accessor :editor
+end
+
+class Ezine < Magazine
+end
+
+
+mag = Magazine.new
+mag.publisher = "David A. Black"
+mag.editor = "Joe Smith"
+
+
+
+3.5.1 Single inheritance : one to a customer
+
+# ruby only support single inheritance
+# ruby in additional provides the modules, which can be grafted to your classes
+
+3.5.2 Object ancestry and the not-so-missing link: the Object class
+
+class C
+end
+class D < C
+end
+
+puts D.superclass
+puts D.superclass.superclass
+
+3.5.3. BasicObject
+
+BasicObject is even older than the Object class.
+
+The idea behind BasicObject is to offer a
+kind of blank-slate object—an object with almost no methods.
+
+> BasicObject.new
+NoMethodError: undefined method `inspect' for #<BasicObject:0x538298>
+
+
+3.6 Classes as objects and messgae receivers
+
+Classes are also object, special objects. you can create Classes, this shows you how :
+
+# formal way
+class Ticket
+  # your code here
+end
+
+# whic is a nice-looking, easily accessed class-definition block.
+
+my_class = Class.new
+
+# with the new class "my_class"< you can create object/instance of that clases
+
+instances_of_my_class = my_class.new
+
+3.6.1 the chick and egs paradox,  (you can ignore this for now)
+
+If you want to create an anonymous class using Class.new, and you also want to add
+instance methods at the time you create it. you can do so by appending a code block
+after the call to new.
+
+c = Class.new do
+  def say_hello
+    puts "Hello!"
+  end
+end
+
+
+*** what is a "code block"
+
+A code block is a fragment of code that you supply as part of a
+method call, which can be executed from the method.
+
+
+3.6.2 HOw classes objects call methods
+
+Tickets.some_message
+*** in this case, the Class is playing the role of the default object self. it looks like this: 
+class Ticket
+  some_message
+  
+*** module is the ancestor of Class
+*** class Class has method 'new' , and the class module has 'attr_accessor'
+
+3.6.3. A singleton metho dby any other name
+
+single method on the Class object is the Class method for objects of that classes
+
+e..g 
+class Ticket
+end
+
+create a Class Ticket, and a Ticket object, and you can creat singleton method on the Ticket object
+
+class Ticket
+  attr_accessor :price
+  def Ticket.most_expensive(*tickets)
+    tickets.max_by(&:price)
+  end
+  
+  th = Ticket.new("Town Hall","11/12/13")
+  cc = Ticket.new("Convention Center","12/13/14/")
+  fg = Ticket.new("Fairgrounds", "13/14/15/")
+  th.price = 12.55
+  cc.price = 10.00
+  fg.price = 18.00
+  highest = Ticket.most_expensive(th,cc,fg)
+end
+
+*** interesting reading, class Class have one class method "new" and a instance method version of "new"
+
+3.6.4.  when , and why, to write a class method 
+
+
+when:
+  operations pertaining to a class can't be performed by individual instance of the classes, like the new method
+  built-in ruby method File.open 
+  
+Remember:
+¦ Classes are objects.
+¦ Instances of classes are objects, too.
+¦ A class object (like Ticket) has its own methods, its own state, its own identity. It
+doesn’t share these things with instances of itself. Sending a message to Ticket isn’t
+the same thing as sending a message to fg or cc or any other instance of
+Ticket.
+
+name conventions: 
+Ticket#price
+Ticket.most_expensive
+Ticket::most_expensive
+
+
+
+3.7  Constants up close
+
+
+Basic use of Constants:
+
+class Ticket 
+  VENUES = ["Convention Center", "Fairgrounds", "Town Hall"]
+end
+
+
+puts "We've closed the class definition."
+puts "So we have to uset he patch notation to reach the constant."
+puts Ticket::VENUES
+
+# other ruby constants
+
+MATH::PI
+>> RUBY_VERSION
+=> "1.9.1"
+>> RUBY_PATCHLEVEL
+=> 0
+>> RUBY_RELEASE_DATE
+=> "2008-12-30"
+>> RUBY_REVISION
+=> 21203
+>> RUBY_COPYRIGHT
+=> "ruby - Copyright (C) 1993-2008 Yukihiro Matsumoto"
+
+3.7.2 Reassigning vs. Modifying constants
+
+A = 1
+A = 2
+
+you will receive the following message:
+
+  warning: already initialized constants A
+
+you can modify the object that it reference to: REMEMBER THIS PARADOX
+
+venues = Ticket::VENUES
+venues << "High School Gym"
+
+
+3.8 Nature vs nurture in Ruby objects. 
+
+general/specific relationship
+
+is-a relationship between base clases and derived classes.
+
+
+mag = Magazine.new
+mag.is_a?(Magazine)
+mag.is_a?(Publication)
+
+
+
+object has natured capability 
+
+mag = Magazine.new
+def mag.wings
+ puts 'Look! I can fly!'
+end
+
+
+
+4. Modules and Program Organization
+
+Encapsulation of behavior in modules
+¦ Modular extension of classes
+¦ The object method-lookup path
+¦ Handling method-lookup failure
+¦ Establishing namespaces with modules and nesting
+
+
+Like classes, modules are bundles of methods and constants. Unlike
+classes, modules don’t have instances; you specify that you want the functionality
+of a particular module to be added to the functionality of a class or of a
+specific object.
+
+Class is a subclass of class Module, so every object is a module object
+
+Kernel: where the majority of hte methods common to all object lives
+
+
+4.1 Basic of module creation and use
+
+module MyFirstModule
+  def say_hello
+    puts "Hello"
+  end
+end
+
+module are "mixed in" to class, using the include method.
+
+class ModuleTester
+  include MyFirstModule
+end
+
+mt = ModuleTester.new
+mt.say_hello
+
+from a class and mixing in a module is
+that you can mix in more than one module. No class can inherit from more than one
+class.
+
+4.1.1. A module encapsulate "stack-like-ness"
+
+
+module Stacklike
+
+  def stack
+    @stack ||= []                                                   #1
+  end  
+
+  def add_to_stack(obj)                                             #2
+    stack.push(obj)
+  end
+
+  def take_from_stack                                               #3
+    stack.pop
+  end
+end
+
+
+# some note on the ||= (or-equals), the net effect of this operator is that it return the object if it is not nil or false; otherwise, set it to a new empty array.
+# NOTE "or-equals", you can rewrite the function as array ||= []
+# how this works out? 
+# the short-cut operators, it requires the object to have the relevant underlying method.
+
+
+4.1.2 Mixing a module into a class
+s = Stacklike.new   # this is wrong.
+
+but you have to mix that in.
+
+#require "stacklike"
+require_relative "stacklike"
+class Stack
+  include Stacklike                                             #1
+end
+s = Stack.new                                                   #1
+s.add_to_stack("item one")                                      #2
+s.add_to_stack("item two")                                      #2
+s.add_to_stack("item three")                                    #2
+puts "Objects currently on the stack:"
+puts s.stack
+taken = s.take_from_stack                                       #3
+puts "Removed this object:"
+puts taken
+puts "Now on stack:"
+puts s.stack
+
+# note, normally the class is a noun, but the module to mixed in is a adjective. , that is the engligh, not the law..
+the above code is relevant to the following code.
+class Stack 
+  attr_reader :stack 
+
+  def initialize 
+    @stack = [] 
+  end 
+
+  def add_to_stack(obj) 
+    @stack.push(obj) 
+  end 
+
+  def take_from_stack 
+    @stack.pop 
+  end 
+end 
+
+
+4.1.3 Leveraging the module further
+
+we will show an example on how to use the module more effectively 
+
+require_relative "stacklike"
+
+class Suitcase
+end
+
+class CargoHold
+  include Stacklike                                                #1
+  def load_and_report(obj)                                         #2
+    print "Loading object "
+    puts obj.object_id
+    add_to_stack(obj)                                              #3
+  end
+  def unload
+    take_from_stack                                                #4
+  end
+end
+ch = CargoHold.new                                                 #5
+sc1 = Suitcase.new
+sc2 = Suitcase.new
+sc3 = Suitcase.new
+ch.load_and_report(sc1)
+ch.load_and_report(sc2)
+ch.load_and_report(sc3)
+first_unloaded = ch.unload
+print "The first suitcase off the plane is...."
+puts first_unloaded.object_id
+
+
+4.2. Modules, classes adn method lookup 
+
+we will examine how the instance discover the appropriate method to invoke 
+
+module M
+  def report
+    puts "'report' method in module M"
+  end
+end
+
+class C
+  include M
+end
+
+class D < C
+end
+
+so this is how that works.
+
+:: Class, modules reversed (there might be multiple modules that has been mixed-in), then up one level and repeat
+
+class Object mixin the module named "Kernel"
+obj = D.new
+obj.report
+
+4.2.2 the rule of mehtod lookup summarized 
+
+¦ Its class
+¦ Modules mixed into its class, in reverse order of inclusion
+¦ The class’s superclass
+¦ Modules mixed into the superclass, in reverse order of inclusion
+¦ Likewise, up to Object (and its mix-in Kernel) and BasicObject
+
+
+4.2.3 Defininig the same name more than once
+
+last win -- first win
+
+in the same class, if you have method of the same name, the LAST WIN
+when more classes and modules are involved, like both the module and class has the same name, the FIRST WIN
+
+module InterestBearing
+  def calculate_interest
+    puts "Placeholder! We're in module InterestBearing."
+  end
+end
+
+class BankAccount
+  include InterestBearing
+  def calculate_interest
+    puts "Placeholder! We're in class BankAccount."
+    puts "And we're overriding the calculate_interest method!"
+  end
+end
+
+account = BankAccount.new
+account.calculate_interest
+
+
+#**** INCLUDING A MODULE MORE THAN ONCE (has no effect)
+
+module M
+  def report
+    puts "'report' method in module M"
+  end
+end
+
+module N
+  def report
+    puts "'report' method in module N"
+  end
+end
+
+class C
+  include M
+  include N
+  include M
+end
+
+
+c = C.new
+c.report
+
+4.2.4. Going up the method searc path with super
+
+you can use the "super" keyword to jump up to the next-highest definition. e.g.
+
+module M
+  def report                                      #1
+    puts "'report' method in module M"
+  end
+end
+class C
+  include M
+  def report                                        #2
+    puts "'report' method in class C"
+    puts "About to trigger the next higher-up report method..."
+    super                                           #3
+    puts "Back from the 'super' call."
+  end
+end
+
+c = C.new
+c.report                                           #4
+
+#*** NOTE:
+# why not calling "super.report" but rather just "super"?
+# think this way, keep looking for next match (rather than just up one level in the class hierarchy, you may include the module in the path of finding as well)
+
+class Bicycle
+  attr_reader :gears, :wheels, :seats
+
+  def initialize(gears = 1)                                  #1
+    @wheels = 2
+    @seats = 1
+    @gears = gears
+  end
+end
+
+class Tandem < Bicycle
+  def initialize(gears)
+    super
+    @seats = 2                                               #2
+  end
+end
+
+# rules regarind when calling the super
+
+
+¦ Called with no argument list (empty or otherwise), super automatically forwards
+the arguments that were passed to the method from which it’s called.
+¦ Called with an empty argument list—super()—it sends no arguments to the
+higher-up method, even if arguments were passed to the current method.
+¦ Called with specific arguments—super(a,b,c)—it sends exactly those
+arguments.
+
+4.3 The method_missing method  (when method looks up fails)
+
+called wheen the search hit top but there is no such method defined.
+
+o = object.new
+o.blah
+def o.method_missing(m, *args)
+   puts "you cannot call #{m} on this object; please try again."
+end
+o.blah
+
+4.3.1 Combining method_missing and super
+
+it is common to intercept an unrecognized message and decide, on the spot,
+whether to handle it or to pass it along to the original method_missing (or possibly an
+intermediate version, if another one is defined).
+
+class Student
+  def method_missing(m, *args)
+    if m.to_s.start_with?("grade_for_") # convert symbol to string before testing..
+      # return the appropriate grade, based on parsing the method name
+    else
+      super
+    end
+  end
+end
+
+a more extensive examples is as follow.
+
+class Person
+  PEOPLE = []                              #1
+  attr_reader :name, :hobbies, :friends    #2
+
+  def initialize(name)
+    @name = name
+    @hobbies = []                          #3
+    @friends = []
+    PEOPLE << self                         #4
+  end
+
+  def has_hobby(hobby)                     #5
+    @hobbies << hobby
+  end
+
+  def has_friend(friend)
+    @friends << friend
+  end
+
+# Continues in 4_13.rb
+
+# Continuation of 4_12.rb
+
+  def self.method_missing(m, *args)
+    method = m.to_s
+    if method.start_with?("all_with_")                #1
+      attr = method[9..-1]                            #2
+      if self.public_method_defined?(attr)            #3
+        PEOPLE.find_all do |person|                   #4
+          person.send(attr).include?(args[0])
+        end
+      else
+        raise ArgumentError, "Can't find #{attr}"     #5
+      end
+    else
+      super                                           #6   
+    end
+  end
+end
+
+j = Person.new("John")
+p = Person.new("Paul")
+g = Person.new("George")
+r = Person.new("Ringo")
+j.has_friend(p)
+j.has_friend(g)
+g.has_friend(p)
+r.has_hobby("rings")
+Person.all_with_friends(p).each do |person|
+  puts "#{person.name} is friends with #{p.name}"
+end
+Person.all_with_hobbies("rings").each do |person|
+  puts "#{person.name} is into rings"
+end
+
+# in the code above, args[0] is the first argument, in our case, it is the p reference
+
+# a note on why we can just do PEOPLE.find_all do |person| { person.send(attr).include?(args[0] } is because 
+# find_all is a filter method.
+# when you return 'true' on iterator (the code block if iterator, then next iterator will include the item (like a filter)
+# so you don't need to wirte
+#   if person.send(attr).include? (args[0])
+#     yield person
+
+4.4 class/module design and naming
+
+all that matters to object is whether a given method exists, not what class or module the method's definition is in.
+
+
+4.4.1. Mix-ins and/or inheritance
+ 
+#a design choice, the mix-in is more a language level composition (functionality) and the inheritance is more a is-a relationship (the inheritance)
+# check below an alternative design with inheritance.
+
+class Stack
+  attr_reader :stack
+
+  def initialize
+    @stack = []
+  end
+
+  def add_to_stack(obj)
+    @stack.push(obj)
+  end
+
+  def take_from_stack
+    @stack.pop
+  end
+end
+
+class Suitcase
+end
+
+class CargoHold < Stack
+  def load_and_report(obj)
+    print "Loading object "
+    puts obj.object_id
+    add_to_stack(obj)
+  end
+  def unload
+    take_from_stack
+  end
+end
+
+# design choice
+# two consideration to bear in mind:
+#   Modules don't have instance
+#   A class have only one superclass, but it can mix in as many modules as it wants.
+
+
+4.4.2 Nesting Modules and classes
+
+# *** very important, ruby also has nesting modules and classes, but unlike the Python code which has 
+# nesting function, and nesting classes, ruby does not allow you to nesting module/classes inside a function
+
+module Tools
+  class Hammer
+  end
+end
+
+# to create the inner classes, you might do the following (while python may not allow you to refer to the inner classes/modules.
+
+h = Tools::Hammer.new
+
+
+4.5. summary 
+
+
+5. The default object (self), scope, and visibility
+
+in this chapter:
+
+¦ The role of the current or default object, self
+¦ Scoping rules for local, global, and class variables
+¦ Constant lookup and visibility
+¦ Method access rules
+
+two major aspect of the ruby programming will be covered in this chapter, that are:
+
+
+5.1 Understanding self, the current/default object
+
+
+the default object, or current object, accessible to you 
+
+
+5.1.1.who gets to be self, and where.? there is a table showing which is condition
+
+the table is as follow. 
+
+Context Example Which object is self?
+
+Context                      Example                    which object is self?
+
+Top level of program    Any code of their block           Main(built-in top level default object)
+Class definition       Class C                               the class object c
+                        self
+module definition     Module M                            the module object M
+                        self
+Method definition    1.Top level (outside any definition)   whatever object is self when 
+                         def method_name                     the method is called, private methods to 
+						    self                             to all objects
+                    2. instance method definition in module  any instance of C, responding to mehtod_name
+					   module M
+					      def method_name
+						    self
+				    3. instance method definition in module  I.indiviaul object extended by M
+					   module M                              II.Instance of class that mixes in M
+					     def method_name
+						    self
+                   4. singleton method on a specific         obj
+				   object
+				       def obj.method_name
+					     self
+
+						 
+
+the default main (self)
+
+ruby -e "puts self"
+
+# to get hold of top-level self, then it 
+m = self
+
+5.1.2. Self inside class, module, and method definitions
+
+class C
+  puts "Just started class C:"
+  puts self
+  module M
+    puts "Nested module C::M:"
+    puts self
+  end
+  puts "Back in the outer level of C:"
+  puts self
+end
+
+5.1.2 Self in instance method definition
+
+to rig a method to show youself as it runs.
+
+class C
+  def x
+    puts "Class C, method x:"
+    puts self
+  end
+end
+c = C.new
+c.x
+puts "That was a call to x by: #{c}"
+
+
+# and the self in the single object
+
+obj = Object.new
+def obj.show_me
+  puts "Inside singleton method show_me of #{self}" # you cannot just do #{obj} becase??
+end
+obj.show_me
+puts "back from the call to show meby ${obj}"
+
+# class method, the singleton method attached to a class
+class C
+  def C.x # or you can just write "self.x" because self in the class scope is the "C"
+    puts "Class method of class c"
+	puts "self: #{self}"
+  end
+end
+
+# prefer to write as "self.x" because that can gives  you the advantage when you rename class names.
+# e.g. 
+class C
+  def self.x
+    puts "Methods name"
+  end
+end
+
+class D < C
+end
+
+5.1.3 self as the default receive of message
+
+# generally you can omit the self when it is necessary 
+
+# some tips: 
+# when method name conflict with variable names, you can use bareword e.g. 'talk' for the variable, and you can 
+# use the 'self.talk()' for the method 
+
+
+# some guidance on the dot operation
+class C
+  def C.no_dot
+    puts "As long as self is C, you can call this method with no dot"
+  end
+  
+  no_dot
+end
+
+C.no_dot
+
+
+5.1.4 Resolving instance variables trough self
+
+# this chapter will include some tips on how to resolve the scope of the variables, whether it is the class object scope or the 
+
+
+5.2. Determing scope
+
+#** instance variable are self-bound, rather than scope-bound..
+
+we will discuss the global, local and class variables.
+
+5.2.1 Global scope and global variables.
+
+global vars has scope rules, and 
+#*** BUILT_IN GlOBAL VARIABLES
+$0: the startup file or the currently running program
+$: contains the directory that make up the path Ruby searches.
+
+#*** you can use the TIP
+require "English" 
+
+# to get english name for the global variables.
+
+PROS and CONS
+
+5.2.2 Local scope
+
+Local Scope is basic layer of hte fabric of every Ruby program
+
+#difference of one scope to another is the supply of the local scopes variables.
+
+¦ The top level (outside of all definition blocks) has its own local scope.
+¦ Every class or module definition block (class, module) has its own local scope,
+even nested class/module definition blocks.
+¦ Every method definition (def) has its own local scope; more precisely, every call
+to a method generates a new local scope, with all local variables reset to an
+undefined state
+
+
+class C
+  a = 5
+  module M
+    a = 4
+    module N
+      a = 3
+      class D
+        a = 2
+        def show_a
+          a = 1
+          puts a
+        end
+        puts a       #1
+      end
+      puts a         #2
+    end
+    puts a           #3
+  end
+  puts a             #4
+end
+
+d = C::M::N::D.new
+d.show_a 
+
+# the output would be 2,3,4,5,1
+
+
+5.2.3 The interaction between local scope and self
+
+when you start a new block, (dyanmically) you create a new scope. here is what you might get 
+
+class C
+  def x(value_for_a,recurse=false)
+    print "Here's the inspect-string for 'self':"
+    p self
+    a = value_for_a
+    puts "And here's a:"
+    puts a
+    if recurse
+      puts "Recursing by calling myself..."
+      x("Second value for a")
+      puts "Back after recursion; here's a:"
+      puts a
+    end
+  end
+end
+
+c = C.new
+c.x("First value for a", true)
+
+# so every call to x generates a new local scope,  even though self doesn't change
+
+5.2.4 scope and resolution of constants
+constants lookup: the process of resolving a constant identifier, finding the right match for it - bears a close resemblance to searching a filesystem.
+
+module M
+  Class C
+    class D
+	  moudle N
+	    X = 1
+      end
+	end
+  end
+end
+
+# as you can see, the resolution is done via relative path
+
+
+FORCING AN ABSOLUTE CONSTANT PATH
+
+class Violin
+  class String
+    ..
+  end
+  def initialize()
+    @e = String.new("E")
+  end
+end
+
+
+# it resolve to however, if you want to resolve to the global String object, then you can do 
+# starting global root suffix 
+#   ::String.new(maker + ", " + date)
+
+
+5.2.5 Class variable syntax, scope and visbility
+
+@@var
+
+
+#**NOTE: 
+#  CLASS VARIABLE ARE NOT CLASS SCOPED, RATHER, IT IS CLASS-HIERARCHY SCOPED. except sometimes.
+# CLASS VARIABLES ACROSS CLASSES AND INSTANCES
+# visibility to a class and its instances, and to no one else.
+
+
+class Car 
+  @@makes = []
+  @@cars = {} 
+  @@total_count = 0 
+
+  attr_reader :make
+
+  def self.total_count
+    @@total_count 
+  end 
+
+  def self.add_make(make)
+    unless @@makes.include?(make) 
+      @@makes << make 
+      @@cars[make] = 0 
+    end 
+  end 
+
+  def initialize(make) 
+    if @@makes.include?(make) 
+      puts "Creating a new #{make}!" 
+      @make = make
+      @@cars[make] += 1
+      @@total_count += 1 
+    else 
+      raise "No such make: #{make}."
+    end 
+  end 
+
+  def make_mates
+    @@cars[self.make] 
+  end 
+end 
+
+#* CLASS variables and the class hierarchy
+
+class Parent
+  @@value = 100
+end
+
+class Child < Parent
+  @@value = 200
+end
+
+class Parent
+  puts @@value
+end
+
+#* a note on the class variables, DO NOT OVERUSE IT
+
+# there are a principle that can help you handle the 
+# situation when the class variables is required
+# MAINTAINING PER-CLASS STATE WITH INSTANCE VARIABLES OF CLASS OBJECTS
+
+class Car 
+  @@makes = [] 
+  @@cars = {} 
+
+  attr_reader :make 
+
+  def self.total_count  # do not use Car.total_count, because self is a scope based reference
+    @total_count ||= 0
+  end 
+
+  def self.total_count=(n) # do not use Car.total_count= because self is a scope based reference
+    @total_count = n
+  end 
+
+  def self.add_make(make) 
+    unless @@makes.include?(make) 
+      @@makes << make 
+      @@cars[make] = 0 
+    end 
+  end 
+
+  def initialize(make) 
+    if @@makes.include?(make) 
+      puts "Creating a new #{make}!" 
+      @make = make 
+      @@cars[make] += 1 
+      self.class.total_count += 1
+    else 
+      raise "No such make: #{make}." 
+    end 
+  end 
+
+  def make_mates 
+    @@cars[self.make] 
+  end 
+end 
+
+class Hybrid < Car
+end
+
+Car.add_make("Honda")
+Car.add_make("Ford")
+h3 = Hybrid.new("Honda")
+h2 = Hybrid.new("Ford")
+
+puts "There are #{Hybrid.total_count} hybrids on the road!"
+
+
+5.3. Deploying method-access rules.
+
+this guard which object can send which method to an object
+
+5.3.1 Private methods
+
+class Cake
+  def initialize(batter)
+    @batter = batter
+    @baked = true
+  end
+end
+
+class Egg
+end
+
+class Flour
+end
+
+class Baker
+  def bake_cake
+    @batter = []
+    pour_flour
+    add_egg
+    stir_batter
+    return Cake.new(@batter)
+  end
+
+  def pour_flour
+    @batter.push(Flour.new)
+  end
+
+  def add_egg
+    @batter.push(Egg.new)
+  end
+
+  def stir_batter
+  end
+
+  private :pour_flour, :add_egg, :stir_batter
+
+end
+
+b = Baker.new
+b.add_egg  # this is not allowed 
+
+# the key here is the private modifier (comparing to the python code where you can hide what you want to hide in the nested function
+
+#** Private seter (=) methods
+
+#the key to the access rule is the "self" accessing rule - a.k.a "No explicit receiver", so that suppose a field is "private :field"
+# then self.field is accessible, but obj.field is not allowed 
+
+# e.g of the private setter (=) methods is as follow
+
+class Dog 
+  attr_reader  :age, :dog_years
+  def dog_years=(years)
+    @dog_year = years
+  end
+  def age=(years)
+    @age = years
+	self.dog_years = years * 7
+  end
+  private :dog_years=
+end
+
+rover = Dog.new
+rover.age = 10
+puts "Rover is #{rover.dog_years} in dog years."
+
+dog = self
+dog.dog_years = years * 7 # you cannot accesss the private setter
+
+5.3.2 Protected methods
+
+only instance of the class X or the ancestor or descendant class of x's class (remember, this include both the ancestor and the descendant)
+
+class C 
+  def initialize(n) 
+    @n = n 
+  end 
+
+  def n 
+    @n 
+  end 
+
+  def compare(c) 
+    if c.n > n #1 
+      puts "The other object's n is bigger." 
+    else 
+      puts "The other object's n is the same or smaller." 
+    end 
+  end 
+
+  protected :n 
+end 
+
+c1 = C.new(100) 
+c2 = C.new(101) 
+c1.compare(c2) 
+
+5.4.1 Defining a top-level method
+method defined at the top level is by default a private method 
+
+def talk
+  puts "Hello"
+end
+
+which is equivalent to the following 
+
+class Object
+  private
+  def talk
+    puts "Hello"
+  end
+end
+
+# Defining private instance methods of Object has some interesting implications
+#    First, these methods not only can but must be called in bareword style. call on "self' and with explicit style
+#    second, private instance methods of Object can be called from anywhere in your code, because Object lies in the method lookup path of every class
+
+
+def talk
+  puts "Hello"
+end
+puts "Trying 'talk' with no receiver..."
+talk
+puts "Trying 'talk' with an explicit receiver..."
+obj = Object.new  
+obj.talk  # this will fail, because it is like calling a private method with a explicit receiver
+
+
+5.4.2 Predefiend (built-in) top-level methods
+
+puts "hello"
+
+# to get all the methods , running this:
+$ ruby -e 'print Kernel.private_instance_methods(false).sort'
+
+
+6. Control-flow techniques
+
+In this chapter
+¦ Conditional execution
+¦ Loops and looping techniques
+¦ Iterators
+¦ Exceptions and error handling
+
+the following will be discussed
+
+¦ Conditional execution—Execution depends on the truth of an expression.
+¦ Looping—A single segment of code is executed repeatedly.
+¦ Iteration—A call to a method is supplemented with a segment of code that the method can call one or more times during its own execution.
+¦ Exceptions—Error conditions are handled by special control-flow rules.
+
+6.1 Conditional code execution
+
+the most canonical
+
+if condition
+  # code here, executed if condition is true
+end
+
+you can do that in a single line
+
+if x > 10 then puts x end
+
+
+semicolon can also be used
+if x > 10; puts x; end
+
+
+if-else-elsif
+
+
+print "Enter an integer: "
+n = gets.to_i
+if n > 0
+  puts "Your number is positive."
+elsif n < 0
+  puts "Your number is negative."
+else
+  puts "Your number is zero."
+end
+
+
+
+negating:
+
+both the not and ! can be used as the negating operator
+
+e.g.
+
+if not (x == 1)
+if !(x == 1)
+
+this is OK:
+
+if not x == 1
+if (!x) = 1
+
+
+unless keyword
+
+x = 1
+
+unless x > 100
+   puts "Small number!"
+else
+  puts "Big number!"
+end
+
+
+CONDITIONAL MODIFIERS
+
+you can start by the conditional modifiers
+
+puts "Big number!" if x > 100
+
+whichi equited
+
+if x > 100
+  puts "Big number!"
+end
+
+ASSIGNMNET SYNTAX IN CONDITION BODIES AND TESTS
+
+if x = 1
+  y = 2
+end
+
+
+local variable assignment in a conditional body: 
+which is quite a bit different from the python rules, only when a variable has been initialized, can you be able to access it..
+
+the assignment test is useful when you are dealing with regular expresions
+
+name = "David A. Black"
+if m = /la/.match(name)
+  puts "Found a match!"
+  print "Here's the unmatched start of the string: "
+  puts m.pre_match
+  print "Here's the unmatched end of the string: "
+  puts m.post_match
+else
+  puts "No match"
+end
+
+
+6.1.3 Case statement
+
+when-case-else statement
+
+print "Exit the program? (yes or no): "
+answer = gets.chomp
+case answer                                                    #1
+when "yes"                                                     #2
+  puts "Good-bye!"
+  exit
+when "no"
+  puts "OK, we'll continue"
+else                                                            #3
+  puts "That's an unknown answer -- assuming you meant 'no'"
+end                   
+
+puts "Continuing with program...."
+# etc.
+
+more than one possible values to the when clause
+
+
+6.1.4 HOW when WORKS
+
+the case equality operator called "==="
+
+NOTE: you might want to find out might be exactly difference between the "==" and the "===" operator.
+
+
+PROGRAMMING OBJECTS CASE STATEMENT BEHAVIOR
+
+class Ticket
+  attr_accessor :venue, :date
+  def initialize(venue, date)
+    self.venue = venue
+    self.date = date
+  end
+
+  def ===(other_ticket)
+#1
+    self.venue == other_ticket.venue
+  end
+end
+
+ticket1 = Ticket.new("Town Hall", "07/08/06")
+ticket2 = Ticket.new("Conference Center", "07/08/06")
+ticket3 = Ticket.new("Town Hall", "08/09/06")
+
+puts "ticket1 is for an event at: #{ticket1.venue}."
+
+case ticket1    
+  when ticket2
+#2
+    puts "Same location as ticket2!"
+  when ticket3
+#3
+    puts "Same location as ticket3!"
+  else
+    puts "No match"
+end
+
+THE SIMPLE CASE TRUTH TEST
+
+this can be very useful when you have one statement to return multiple possbile values. 
+
+puts case
+	when user.first_name == "David", user.last_name == "Black"
+	  "You might be David Black."
+	when Time.now.wday == 5
+	  "You're not David Black, but at least it's Friday!"
+	else
+	  "You're not David Black, and it's not Friday."
+	end
+
+
+6.2 Repeating actions with loops
+
+you can loop while a given condition is true; simple do the following 
+
+
+loop { puts "Looping forever!" }
+loop do
+  puts "Looping forever!"
+end
+
+well, you can contrl the loop as follow 
+
+n = 1
+loop do
+  n = n + 1
+  break if n > 9
+end
+
+or the next one (there is no continue in ruby)
+n = 1
+  loop do
+  n = n + 1
+  next unless n == 10
+  break
+end
+
+loop with while 
+
+n = 1
+while n < 11
+	puts n
+	n = n + 1
+end
+puts "Done!"
+
+loop with until.
+
+
+n = 1
+until n > 10
+	puts n
+	n = n + 1
+end
+
+WHILE AND UNTIL MODIFIERS
+
+n = 1
+n = n + 1 until n == 10
+puts "We've reached 10!"
+
+
+6.2.3 LOOPING BASED ON A LIST OF VALUES.
+
+celsius = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+puts "Celsius\tFahrenheit"
+for c in celsius
+  puts "c\t#{Temperature.c2f(c)}"
+end
+
+6.3. Iterators and code blocks
+
+answer is that loop is an iterator. An iterator is a Ruby method that has an extra
+ingredient in its calling syntax: it expects you to provide it with a code block.
+
+Iteration, home-style
+
+def my_loop 
+  while true
+    yield
+  end
+end
+
+or you can write as follow.. 
+
+
+def my_loop
+  yield while true
+end
+
+
+6.3.3 the anatomy of a method call
+
+
+¦ A receiver object or variable (usually optional, defaulting to self)
+¦ A dot (required if there’s an explicit receiver; disallowed otherwise)
+¦ A method name (required)
+¦ An argument list (optional; defaults to ())
+¦ A code block (optional; no default)
+
+
+6.3.4 Curly braces vs d_o /end in code block styntax
+
+
+array = [1, 2, 3]
+
+array.map { |n| n * 10 }
+
+array.map {n| n * 10 }
+
+# the puts will ignore the code block
+puts array.map do |n| n * 10 end
+
+
+6.3.5 Implementing times
+
+class Integer
+  def my_times
+    c = 0
+    until c == self
+      yield(c)     # yield something, you can yield more than one values. 
+      c += 1
+    end
+    self  # return something in a iterator
+  end
+end
+
+
+6.3.6 The importance of being each
+
+
+array = [1,2,3,4,5]
+array.each {|e| puts "The block just got handed #{e}." }
+
+
+one of the implementation is as follow
+
+class Array
+  def my_each
+    c = 0
+    until c == size
+      yield(self[c])
+      c += 1
+    end
+    self
+  end
+end
+
+6.3.7 Fom each to Map 
+
+class Array
+  def my_map
+    c = 0
+    acc = []
+    until c == size
+      acc << yield(self[c])
+      c += 1
+    end
+    acc
+  end
+end
+
+
+and you can building on top of EACH 
+class Array 
+    # Put the definition of my_each here
+  def my_map
+    acc = []
+    my_each {|e| acc << yield(e) }
+    acc
+  end
+end
+
+
+6.3.8  Block parameter and variables semantics
+
+you have to watch for the scope of the local varaible.
+
+
+the rules are 
+
+1. in the code block, you can still access the outside local variable
+2. bound variable (or a.k.a. ) get a new value each iteration
+3. you can have "local" varaible semantic
+
+def block_local_variable
+  x = "Original x!"
+  3.times do |i;x|
+    x = i
+    puts "x in the block is now #{x}"
+  end
+  puts "x after the block ended is #{x}"
+end
+
+
+6.4. Error handlign and exceptions
+
+before the code is run
+
+$ ruby -cw filename.rb
+
+6.4.1 Raising and rescuing exceptions
+
+TO see exception in action, try dividing by zero:
+
+
+common exception and how to raise them
+
+RuntimeError              raise
+NoMethodError            a = object.new
+                         a.some_unknown_method_name
+NameError                a = some_random_identifier
+IOError                  STDIN.puts("Dont'write to STDIN!")
+Errno::error             File.open(-12)
+TypeError                a = 3 + "can't add a string to a number"
+ArgumentError            def m(x); end; m(1,2,3,4,5)
+
+
+6.4.2. the rescue keyword to the rescue!
+
+print "Enter a number: "
+n = gets.to_i
+begin
+  result = 100 / n
+rescue
+  puts "Your number didn't work. Was it zero???"
+  exit
+end
+puts "100/#{n} is #{result}"
+
+
+you can catch on exact type of exception that you specified
+
+rescue ZeroDivisionError
+
+you can use the rescue inside methods code blocks
+
+def open_user_file
+  print "File to open:" 
+  filename = gets.chomp
+  fh = File.open(filename)
+  yield fh
+  fh.close
+  rescue
+    puts "Couldn't open your file!"
+end
+
+and you can be more fine-grained, such as 
+
+def open_user_file
+  print "File to open: "
+  filename = gets.chomp
+  begin
+    fh = File.open(filename)
+  rescue
+    puts "Couldn't open your file!"
+    return
+  end
+  yield fh
+  fh.close
+end
+
+
+6.4.3. Raising exceptions explicitly
+
+
+def fussy_method(x)
+  raise ArgumentError, "I need a number under 10" unless x < 10
+end
+  fussy_method(20)
+
+begin
+  fussy_method(20)
+rescue ArgumentError
+  puts "That was not an acceptable number!"
+end
+
+
+also, though not what I would prefere, you can let the system to construct the runtime Exception to raise
+
+raise "Problem!"
+raise RuntimeError, "Problem!"
+
+
+6.4.4 Capturing an exception in a rescue clause
+
+begin 
+  fussy_method(20)
+rescue ArgumentError => e
+  puts "That was not an acceptable number!"
+  puts "Here's the backtrace for this exception"
+  puts e.backtrace
+  puts "Adn here's the exception object's message"
+  puts e.message
+end
+
+# in reality, the instance rather the class itself is raised., e.g is as follow. 
+
+
+RE-RAISING AN EXCEPTION
+
+begin 
+  fh = File.open(filename)
+rescue => e
+  logfile.puts("User tried to open #{filename}, #{Time.now}")
+  logfile.puts("Exception: #{e.message}")
+  raise
+end
+
+6.4.5 The ensure clause 
+
+the ensure is like the finally block that will execute exactly once whatever the exception happens or not 
+
+
+def line_from_file(filename, pattern)
+  fh = File.open(filename)
+  begin
+    line = fh.gets
+    raise ArgumentError unless line.include?(pattern)
+  rescue ArgumentError
+    puts "Invalid line!"
+    raise
+  ensure
+    fh.close
+  end
+  return line
+end
+line_from_file("6_4_5EnsureClause.rb", "hello")
+
+we will have another chapter that tells the more advanced way to ensure a resource is closed properly.
+
+
+6.4.6 Creating your own exception class
+
+class MyNewException < Exception
+
+end
+
+
+
+class InvalidLineError < StandardError
+
+end
+
+
+def line_from_file(filename, pattern)
+  fh = File.open(filename)
+  line = fh.gets
+  raise InvalidLineError unless line.include?(pattern)
+  return line
+  rescue InvalidLineError
+    puts "Invalid line!"
+    raise
+  ensure
+    fh.close
+end
+
+
+7. Built-in clases and modules.
+
+:  strings, arrays, files, and so forth
+
+¦ In this chapter
+¦ Literal object constructors
+¦ Syntactic sugar
+¦ "Dangerous" an_d/or destructive methods
+¦ The to_* family of conversion methods
+¦ Boolean states and objects, and nil
+¦ Object-comparison techniques
+¦ Runtime inspection of objects’ capabilities
+
+7.1 Ruby’s literal constructors
+
+
+String  "new string" | 'new string'
+Symbol :symbol, :"symbol with spaces"
+
+Array   [1,2, 3,4,5]
+Hash       {"New York" => "NY" , "Oregon" => "OR"}
+Range    0..9, 0...9
+Regexp   /([a-z]+)/
+Proc   ->(x, y) { x * y}
+
+7.2 Recurrent syntactic sugar
+
+7.2.1 Defining operators by defining methods
+
+
+class Account
+  attr_accessor :balance
+  def initialize(amount=0)
+    self.balance = amount
+   end
+  def +(x)
+    self.balance += x
+  end
+  def -(x)
+    self.balance -= x
+  end
+  def to_s
+    balance.to_s
+  end
+end
+
+acc = Account.new(20)
+acc -= 5
+puts acc
+
+TYPE OF OPERATORS THAT SHALL BE SUPPORTED
+
+Arithmetic method/operators
+Get/set/append data
+Comparison method/operators
+Case equality operator
+Bit-wise operators
+
+
+
+7.2.2 Customizing unary operators
+
+class Banner < String
+  def +@
+    upcase
+  end
+  def -@
+    downcase
+  end
+end
+
+banner = Banner.new("Eat at David's!")
+puts +banner
+puts -banner
+
+you can as well define the operator "not" ! 
+
+class Banner
+  def !
+    reverse
+  end
+end
+
+
+7.3 Bang(!) methods and "danger"
+
+bang method is treated no specially by the python code system, but it has some convention that has been imposed by them...
+
+7.3.1 Destructive (receiver-changing) effects as danger
+
+str = "Hello"
+str.upcase
+str
+str.upcase!
+str
+
+
+7.3.2 Destructive  and "danger" vary independently 
+
+some guidelines on the methods pairs
+
+DON'T USE ! EXCEPT IN M/M! METHOD PAIRS'
+DON’T EQUATE ! NOTATION WITH DESTRUCTIVE BEHAVIOR, OR VICE VERSA
+
+
+7.4 Built-in and custom to_* (conversion) methods
+
+to_s method is called by certain method to print the string representation of one object.
+
+obj = Object.new
+
+puts obj
+
+def obj.to_s
+  "I'm an object!"
+end
+
+puts obj
+
+
+THE inspect, to_s, AND eigen 
+
+puts object
+puts object.to_s
+puts object.inspect
+
+
+
+BORN TO BE OVERRIDEN: inspect
+
+e.g. the regular expression, with to_s, it returns the parsed regular expression and with inspect, it returns what ias been input from the command line.
+
+>> re = /\(\d{3}\) \d{3}-\d{4}/
+=> /\(\d{3}\) \d{3}-\d{4}/
+>> puts re
+(?-mix:\(\d{3}\) \d{3}-\d{4})
+=> nil
+>> puts re.inspect
+/\(\d{3}\) \d{3}-\d{4}/
+=> nil
+
+inspect is used when you call p
+
+
+DISPLAY method 
+
+"hello".display
+
+
+how and when the display method shall be used
+
+fh = File.open("/tmp/display.out", "w")
+"hello".display(fh)
+fh.close
+
+
+# is there a with statment as in Python?
+
+
+begin
+  fh = File.open("c:\temp\displayout.out", "w")
+  "hell".display(fh)
+  fh.close
+  puts(File.read('c:\temp\displayout.out')
+rescue
+  if not fh == nil
+    fh.close()
+  end
+end
+
+7.4.2 ARRAY CONVERSION WITH to_a and * operator
+* The * operator (pronounced “star,” “unarray,”  or, among the whimsically inclined, “splat”
+
+the star turns any array, or any object that responds to to_a, into
+the equivalent of a bare list.
+
+what is a bare-list 
+[1,2,3,4,5] 
+
+notation lying between the brackets isn’t, itself, an
+array; it’s a list, and the array is constructed from the list, thanks to the brackets
+
+e.g.
+
+
+array = [1,2,3,4,5]
+[*array]
+
+you can use * operator to turn a array to a list, which can be used in the following example.
+
+
+def combine_names(first_name, last_name)
+  first_name + " " + last_name
+end
+
+names = ["David", "Black"]
+puts combine_names(*names)
+
+NOTE : this can be very useful and you can analogy this to the python's * operator, which used to indicate a list arguments, and ** to means a dictionary arguments' 
+
+7.4.3
+
+
+for non conforming conversion, 0 will be returned and stop processing any further, comparing that to C#'s implementatoin'
+"hello".to_i
+"1.23hello".to_f
+
+but if you want to do some strict conversion, you 'd better to use the integer or float function'                
+
+
+7.4.4 The role-playing to_* methods
+
+
+STRING role-playing with to_str
+
+to_s used when you puts the string
+to_str used when you want the obejct to be a string
+
+"hello" + 10  # this will fail , and there is where the string will kicks in
+
+
+class Person 
+  attr_accessor :name
+  
+  def to_str
+    name
+  end
+end
+david = Person.new
+
+david.name = "David"
+
+puts "david is named" + david + "."
+
+ARRAY ROLE-PLAYING WITH to_ary
+
+object can masquerade as an array 
+
+to_ary
+
+class Peson
+  attr_accessor :name, :age, :email
+  
+  def to_ary
+    [name, age, email]
+  end
+end
+
+david = Peson.new 
+david.name = "David"
+david.age = 49
+david.email = "david@wherever"
+array = []
+array.concat(david)
+p array
+
+
+7.5. Boolean state, boolean object, and nil
+
+true and false are object, 
+
+
+true.class
+false.class
+
+some boolean values :
+
+class definition: empty one is false
+class definition: return the last expression
+method definition : is false, whatever values return in the method definition
+
+
+TRUE/FALSE AND true/false: STATES VS. VALUES
+
+
+some mantra to call: 
+  TRUE /FALSE is the state.
+
+true/false is the object. 
+
+every object has a boolean value , which gives you the boolean truth, however, it is not mean the boolean truth is true/false object, true/false object itself returns boolean truth..
+
+
+7.5.3. the special object nil
+
+
+# which is the same as the None in python
+
+nil.class
+
+the class of nil is "NilClass"
+
+
+nil denote the absense of anything....
+
+puts @x
+["one", "two", "three"][9]
+
+
+
+>> ["one","two","three"][9]
+=> nil
+>> nil.to_s
+=> ""
+>> nil.to_i
+=> 0
+>> nil.object_id
+=> 4
+
+
+SOME INTERESTING object_ids
+
+
+false.object_id = 0
+0.object_id = 1
+true.object_id = 2
+1.object_id = 3
+nil.object_id = 4
+
+boolean provide segue to next topic, the object comparison..
+
+7.6 Comparing two objects
+
+
+normally you can mix in the module called "Comparable"
+
+
+7.6.1 Equality tests
+
+following is the equality test
+
+>> a = Object.new
+=> #<Object:0x401c653c>
+>> b = Object.new
+=> #<Object:0x401c4bd8>
+>> a == a
+=> true
+>> a == b
+=> false
+>> a != b
+=> true
+>> a.eql?(a)
+=> true
+>> a.eql?(b)
+=> false
+>> a.equal?(a)
+=> true
+>> a.equal?(b)
+=> false
+
+
+If you want objects of class MyClas to have the full suite of comparison methods, all you have to do is the following
+
+1 Mix a module called Comparable (which comes with Ruby) into MyClass.
+2 Define a comparison method with the name <=> as an instance method in MyClass
+
+The comparison method <=> (usually called the spaceship operator or spaceship method)
+is the heart of the matter
+
+
+SPACESHIP METHOD, SPACESHIP METHOD, SPACESHIP METHOD.
+
+
+an e.g.
+
+class Bid
+  include Comparable
+  attr_accessor :estimate
+  
+  def <=> (other_bid)
+    if self.estimate < other_bid.estimate
+	  -1
+	elsif self.estimate > other_bid.estimate
+	  1
+	else
+	  0
+	end
+  end
+end
+
+
+or an even simpler implementation is
+
+def <=> (other_bid)
+  self.estimate <=> other_bid.estimate
+end
+
+# the  test code below
+
+
+bid1 = Bid.new
+bid2 = Bid.new
+bid1.estimate = 100
+bid2.estimate = 105
+bid1 < bid2
+
+7.7 Inspecting object capability
+
+inspection and reflection refer, collectively, to the various ways in which you can get Ruby objects to tell you about 
+
+7.7.1 Listing an object's methods'.
+
+
+object has an methods. 
+
+Class object also has a methods method
+
+"I am a String object".methods
+String.method.sort
+
+conveniently, you can just query for the singleton methods of a single object
+
+str.signleton_methods
+
+
+
+str = "Another plain old string."
+module StringExtras
+  def shout
+    self.upcase + "!!!"
+  end
+end
+
+class String
+  include StringExtras
+end
+
+str.methods.include?(:shout)
+
+7.7.2 Querying class and module objects
+
+you can query on the instance methods on a Class object
+
+
+String.instance_methods.sort
+
+Enumerable.instance_methods.sort
+
+
+7.7.3 filtered and selected methods list
+
+to show methods just in that class. 
+
+String.instance_methods(false).sort
+
+other methods listing methods
+
+obj.private_methods
+obj.public_methods
+obj.protected_methods
+obj.singleton_methods
+
+
+and even more combination
+
+¦ MyClass.private_instance_methods
+¦ MyClass.protected_instance_methods
+¦ MyClass.public_instance_methods
+
+public_instance_methods is the same as the instance_methods
+
+
+8. Strings, Symbols, and other scalar objects
+
+In this chapter
+¦ String object creation and manipulation
+¦ Methods for transforming strings
+¦ Symbol semantics
+¦ String/symbol comparison
+¦ Integers and floats
+¦ Time and date objects
+
+
+
+8.1 Working with Strings
+
+Strings and symbols are deeply different from each other, but they’re similar enough in their
+shared capacity to represent text that they merit being discussed in the same chapter
+
+
+string interpolation details
+
+puts "Backslashes (\\) have to be escaped in double quotes."
+puts 'You can just type \ once in a single quoted string.'
+puts "But whichever type of quotation mark you use..."
+puts "...you have to escape its quotation symbol, such as \"."
+puts 'That applies to \' in single-quoted strings too.'
+puts 'Backslash-n just looks like \n between single quotes.'
+puts "But it means newline\nin a double-quoted string."
+puts 'Same with \t, which comes out as \t with single quotes...'
+puts "...but inserts a tab character:\tinside double quotes."
+puts "You can escape the backslash to get \\n and \\t with double quotes."
+
+
+other quoting mechanisms
+
+puts %q{You needn't escape apostrophes when using %q.}
+
+
+# %q for single quote and %Q for double quote
+%q-A string-
+%Q/Another string/
+%[Yet another string]
+
+If you’re using right/left matching braces and Ruby sees a left-hand one inside the
+string, it assumes that the brace is part of the string and looks for a matching righthand
+one. you have to do escape if you want to use a unmatched one
+
+
+%Q[I can put [] in here unescaped.]
+%q(I have to escape \( if I use it alone in here.)
+%Q(And the same goes for \).)
+
+
+one note though:
+  irb doesn’t play well with some of this syntax
+  
+  
+"HERE" DOCUMENTS
+
+a "here" document, or here-doc, is a string, usually multiline string. that ofetn takes the form of a template or a set of date lines
+
+>> text = <<EOM
+This is the first line of text.
+This is the second line.
+Now we're done.
+EOM
+
+
+to switch off the FLUSH-LEFT requirement
+
+>> text = <<-EOM
+The EOM doesn't have to be flush left!
+EOM
+=> "The EOM doesn't have to be flush left!\n"
+
+
+you can use the Here document in a literal constructor , here is an example where we put a string into an array .
+
+
+
+a = <<EOM.to_i * 10
+5
+EOM
+puts a
+
+
+
+array = [1,2,3,<<EOM, 4]
+This is the here-doc!
+It becomes array[3].
+EOM
+
+p array
+
+
+or even more esoteric, here is what you might getting 
+
+array = [1,2,3,<<EOM, <<LAST]
+This is the here-doc!
+It becomes array[3].
+EOM
+And this is the array[4]
+LAST
+
+p array 
+
+8.1.2 Basic string manipulation
+
+Basic in this context means manipulating the object at the lowest levels. Retrieving and setting sbustrings, and combining strings with each other.
+
+
+GETTINGS AND SETTINGS SUBSTRINGS
+
+>> string = "Ruby is a cool language."
+=> "Ruby is a cool language."
+>> string[5]
+=> "i"
+>> string[-12]
+=> "o"
+>> string[5,10]
+=> "is a cool "
+
+
+# stirng object can also expect a range operator, and also, it can accept negative number, to indicate some backward operation.
+
+>> string[7..14]
+=> " a cool "
+>> string[-12..-3]
+=> "ol languag"
+
+
+# while if you pass some string operation, you are looking for the index of the operator
+
+string["cool lang"] # if not found, then nil shall be returned, if found it is returned. (why not returns the index?)
+string["very cool lang"]
+
+# you can do the similar things to the regular expressions
+
+string[/c[ol ]+/]
+
+# [] is aliased with slice.. well, you have a slice! methods as well
+
+string.slice!("cool ")  # means slicing literally 
+string
+
+# the replace methods 
+string["cool"] = "great"
+string[-1] = "!"
+string[-9..-1] = "thing to learn!"
+
+# you try part of a string that does not exit, - a tool high or too-low numeric index, or a string or regular expression that does not match the string - you get a fatal error.
+
+
+
+COMBINNING STRINGS
+"a" + "b"
+"a" + "b" + "c"
+
+APPENDING STTRINGS
+
+str = "H1"
+str << "there"
+
+
+STRING COMBINATION VIA INTERPOLATION
+str = "Hi"
+
+"#{str} there."
+
+
+anything is allowed in the interpolation
+
+"My name is #{class Person
+               attr_accessor :name
+			 end
+			 d = Person.new
+			 d.name = "David"
+			 d.name
+			 }."
+"
+
+you can define the to_s which shall be called by the string interpolation
+
+class Person
+  attr_accessor :name
+  def to_s
+    name
+  end
+end
+
+david = Person.new
+david.name = "David"
+
+"hello,#{david}"
+
+8.1.3 Querying strings
+
+
+BOOLEAN STRING QUERIES
+
+include?
+
+  string.include?("Ruby")
+
+  string.incldue?("Engligh")
+
+start_with?  
+end_with?
+  #some tips, if you are working with Pascal, camcel then it should be startsWith or endsWith, notice the small 's' in-between'
+  string.start_with?("Ruby")
+  string.end_with?("!!!")
+  
+string.empty?
+
+"".empty?
+CONTENT QUERIES
+
+string.size
+  string.size 
+string.count
+
+  string.count("g-m")  # you can pass in a range (why not directly passing a regular expression?
+  string.count('aey')
+  
+  You can combine the specification syntaxes and even provide more than one arguments:
+
+
+  string.count("ag-m")
+  string.count("ag-m")
+
+  >_ anchor style (assert style)
+  string.count("ag-m", "^")
+  string.count("ag-m")
+  
+  you can do some reverse look up ,just like this:
+  
+  string.index("cool")
+  string.index("l")
+  
+string.index
+  
+  string.index("cool")
+  string.index("1")
+  stirng.rindex("1")
+  
+  although strings are  made up of characters, Ruby has no separate character class. 

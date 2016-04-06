@@ -1,0 +1,9 @@
+about the tool
+
+AnhkSVN - SUbversion Support / SCC Provider
+
+
+AnkhSVN - Subversion Support for Visual Studio: http://ankhsvn.open.collab.net/
+
+
+download address:  http://visualstudiogallery.msdn.microsoft.com/E721D830-7664-4E02-8D03-933C3F1477F2

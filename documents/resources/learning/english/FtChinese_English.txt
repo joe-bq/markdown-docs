@@ -1,0 +1,2 @@
+[FtChinese_English]
+Url = http://www.ftchinese.com/channel/english.html

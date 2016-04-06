@@ -1,0 +1,4 @@
+[dotPeek]
+url = http://www.jetbrains.com/decompiler/download/download_thanks.jsp?os=msi
+video = http://www.jetbrains.com/decompiler/documentation/index.jsp
+shortcut = http://confluence.jetbrains.com/display/NETPEEK/dotPeek+Keyboard+Shortcuts

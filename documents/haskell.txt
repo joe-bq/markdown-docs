@@ -1,0 +1,243 @@
+referential transparency,, one value is as good as another in Haskell if it represents the same thing. 
+
+e.g. 
+
+ we have to have some way of knowing exactly which five in our tree we want to change. We have to know where it is in our tree. In impure languages, we could just note where in our memory the five is located and change that. But in Haskell, one five is as good as another, so we can't discriminate based on where in our memory they are. 
+ 
+ 
+ 
+One thing we can do is to remember a path from the root of the tree to the element that we want to change. it can be inefficient. If we want to later change an element that's near the element that we previously changed, we have to walk all the way from the root of the tree to our element again!
+
+
+Taking a walk: 
+
+Like we've learned in biology class, there are many different kinds of trees, so let's pick a seed that we will use to plant ours. Here it is:
+
+data Tree a = Empty | Node a (Tree a) (Tree a) deriving (Show)  
+ 
+ 
+So, our tree is either empty or it's a node that has an element and two sub-trees, Here's a fine examples of such a tree, which give to you, the reader for free. 
+
+
+ 
+freeTree :: Tree Char  
+freeTree =   
+    Node 'P'  
+        (Node 'O'  
+            (Node 'L'  
+                (Node 'N' Empty Empty)  
+                (Node 'T' Empty Empty)  
+            )  
+            (Node 'Y'  
+                (Node 'S' Empty Empty)  
+                (Node 'A' Empty Empty)  
+            )  
+        )  
+        (Node 'L'  
+            (Node 'W'  
+                (Node 'C' Empty Empty)  
+                (Node 'R' Empty Empty)  
+            )  
+            (Node 'A'  
+                (Node 'A' Empty Empty)  
+                (Node 'C' Empty Empty)  
+            )  
+        )  
+
+
+and graphically, if we want to change the node denoted by 'w' to symbol denoted by 'p',  one way would be to pattern match on our tree until we find the element that's located by first going right and then left and changing said element. Here's the code for this:
+
+
+changeToP :: Tree Char -> Tree Char  
+changeToP (Node x l (Node y (Node _ m n) r)) = Node x l (Node y (Node 'P' m n) r) 
+
+
+Well, we pattern match on our tree and name its root element x (that's becomes the 'P' in the root) and its left sub-tree l. Instead of giving a name to its right sub-tree, we further pattern match on it. We continue this pattern matching until we reach the sub-tree whose root is our 'W'. Once we've done this, we rebuild the tree, only the sub-tree that contained the 'W' at its root now has a 'P'., 
+ 
+Does it sound rather hard-coded? 
+ 
+Second approach: 
+ 
+data Direction = L | R deriving (Show)  
+type Directions = [Direction]  
+  
+changeToP :: Directions-> Tree Char -> Tree Char  
+changeToP (L:ds) (Node x l r) = Node x (changeToP ds l) r  
+changeToP (R:ds) (Node x l r) = Node x l (changeToP ds r)  
+changeToP [] (Node _ l r) = Node 'P' l r  
+
+so given a list of directions, then the changeToP will divert accorinding to the current list haad, if the root elemement is a L, then it will goes to the Left side, and if the list is a R, then it will divert to the Right; , if an epty list i smet, then we know that we are cusoring the tree to the element that we wantted to change, so we can directly change the root element to "p".. 
+
+
+and to help assiting the code change, here is what we can do :
+
+elemAt :: Directions -> Tree a -> a  
+elemAt (L:ds) (Node _ l _) = elemAt ds l  
+elemAt (R:ds) (Node _ _ r) = elemAt ds r  
+elemAt [] (Node x _ _) = x  
+
+
+so, with the two helper function, let's see what we will get after the modification. 
+
+ghci> let newTree = changeToP [R,L] freeTree  
+ghci> elemAt [R,L] newTree  
+'P'  
+
+
+the downside of this approach is that it could be really low effecient
+
+While this technique may seem cool, it can be rather inefficient, especially if we want to repeatedly change elements. Say we have a really huge tree and a long direction list that points to some element all the way at the bottom of the tree.
+
+/// 
+A trail of breadcrumbs
+
+
+Would it help if we start at the root of the tree and move either left or right one step at a time and sort of leave breadcrumbs? That is, when we go left, we remember that we went left and when we go right, we remember that we went right. 
+
+
+so, here is the modification to the previous code. 
+
+type Breadcrumbs = [Direction]  
+
+and  when we go left, here is what we have: 
+
+goLeft :: (Tree a, Breadcrumbs) -> (Tree a, Breadcrumbs)  
+goLeft (Node _ l _, bs) = (l, L:bs)  
+
+and if we choose to go right: 
+
+goRight :: (Tree a, Breadcrumbs) -> (Tree a, Breadcrumbs)  
+goRight (Node _ _ r, bs) = (r, R:bs)  
+
+Let's put it on a dry run rackets. 
+
+ghci> goLeft (goRight (freeTree, []))  
+(Node 'W' (Node 'C' Empty Empty) (Node 'R' Empty Empty),[L,R])  
+
+
+to help us understand this better, now we have this operator defined as below. 
+
+x -: f = f x  
+
+
+Which allows us to apply functions to values by first writing the value, then writing a -: and then the function., so instead of 
+
+goRight (freeTree, [])
+
+we can write as 
+
+(freeTree, []) -: goRight
+
+so, we can chain that together.
+
+ghci> (freeTree, []) -: goRight -: goLeft  
+(Node 'W' (Node 'C' Empty Empty) (Node 'R' Empty Empty),[L,R])  
+
+
+Going back up 
+
+we cannot go up with the Breadcumbs that we left beforehand, it only gives a trail of Left, right nothing more..   It would seem that apart from the direction that we took, a single breadcrumb should also contain all other data that we need to go back up, that is the element in the parent treee along wit is rght sub-tree if we are going to the left tree. 
+
+data Crumb a = LeftCrumb a (Tree a) | RightCrumb a (Tree a) deriving (Show)  
+
+with this data, we are able to recreate the three that we walked through, so instead of just being normal read crumbs, they're now more likey floppy disks that we laeve as we go along. because they contains a lot more information than just the direction that we took .
+
+
+Let's also change our Breadcrumbs type synonym to reflect this:
+
+type Breadcrumbs a = [Crumb a]  
+
+Next up, we have to modify the goLeft and goRight functions to store information about the paths that we didn't take in our breadcrumbs, instead of ignoring that information like they did before. Here's goLeft:
+
+goLeft :: (Tree a, Breadcrumbs a) -> (Tree a, Breadcrumbs a)  
+goLeft (Node x l r, bs) = (l, LeftCrumb x r:bs)  
+
+Note that this function assumes that the current tree that's under focus isn't Empty, and if we try to go on a empty tree, we should just throw out some exceptions, because there is no patterns that takes capre of a Empty
+
+
+goRight :: (Tree a, Breadcrumbs a) -> (Tree a, Breadcrumbs a)  
+goRight (Node x l r, bs) = (r, RightCrumb x l:bs)  
+
+
+now, finally we have a goUp function, now it loooks like this: 
+
+goUp :: (Tree a, Breadcrumbs a) -> (Tree a, Breadcrumbs a)  
+goUp (t, LeftCrumb x r:bs) = (Node x t r, bs)  
+goUp (t, RightCrumb x l:bs) = (Node x l t, bs)  
+
+Note that this function causes an error if we're already at the top of a tree and we want to move up. Later on, we'll use the Maybe monad to represent possible failure when moving focus.
+
+
+With a pair of Tree a and Breadcrumbs a, we have all the information to rebuild the whole tree and we also have a focus on a sub-tree, this schema enables us to easily move up, left and right;
+
+And, finally let's introduce the Zipper class with honder: 
+
+Such a pair that contains a focused part of a data structure and its surroundings is called a zipper, 
+
+type Zipper a = (Tree a, Breadcrumbs a)  
+
+
+I'd prefer naming the type synonym Focus because that makes it clearer that we're focusing on a part of a data structure, but the term zipper is more widely used to describe such a setup, so we'll stick with Zipper.
+
+
+-------------------
+
+Manipulating trees under focus
+
+with the ability to move up and down, now let's make a function that modifies the element in the root of the sub-tree that the zipper is focused on: 
+
+modify :: (a -> a) -> Zipper a -> Zipper a  
+modify f (Node x l r, bs) = (Node (f x) l r, bs)  
+modify f (Empty, bs) = (Empty, bs)  
+
+if we are on an empty tree, we leave it as it is .  we can now start off a tree and move to anywhere we want and modify an element , all while keeping foucs on that element so that we can easily move further up or down 
+
+ghci> let newFocus = modify (\_ -> 'P') (goRight (goLeft (freeTree,[])))  
+
+and this can read even better if we use the :- to rever the argument the function that we shall apply..
+
+ghci> let newFocus = (freeTree,[]) -: goLeft -: goRight -: modify (\_ -> 'P')  
+
+we can move up and change the element with a mysterious 'X'
+
+ghci> let newFocus2 = modify (\_ -> 'X') (goUp newFocus)  
+
+again, with the -: element, we can have this: 
+
+ghci> let newFocus2 = newFocus -: goUp -: modify (\_ -> 'X')  
+
+
+So if we're focusing on an empty sub-tree, one thing we can do is to replace it with a non-empty subtree, thus attaching a tree to a leaf node. The code for this is simple:
+ 
+attach :: Tree a -> Zipper a -> Zipper a  
+attach t (_, bs) = (t, bs)  
+
+ Let's attach a tree to the far left of our freeTree:
+ 
+ghci> let farLeft = (freeTree,[]) -: goLeft -: goLeft -: goLeft -: goLeft  
+ghci> let newFocus = farLeft -: attach (Node 'Z' Empty Empty)  
+
+It might ends up with an erraneous condition if you try to attach a tree to a non-empty tree. 
+
+We can as well go up to the upmost of a tree. 
+
+topMost :: Zipper a -> Zipper a  
+topMost (t,[]) = (t,[])  
+topMost z = topMost (goUp z)  
+
+
+If our trail of beefed up breadcrumbs is empty, this means that we're already at the root of our tree, so we just return the current focus. Otherwise, we go up to get the focus of the parent node and then recursively apply topMost to that. 
+
+
+ 
+-------------------
+
+Focusing on List
+
+Zippers can be used with pretty much any data structure,  with this analogy, you can compare a list to a tree, except that a tree has an element and several sub-trees, while a list has one element and a sublist. so you can make define the list as follow.
+
+data List a = Empty | Cons a (List a) deriving (Show, Read, Eq, Ord)  
+
+
+Let's make a zipper for list, to change the focus on sub-lists of a list, we move either forward or back (whereas with trees we moved either up or left or right) ... For list, all we need to remember is the previous element, 
+

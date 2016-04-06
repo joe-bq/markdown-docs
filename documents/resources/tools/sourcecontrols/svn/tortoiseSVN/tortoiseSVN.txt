@@ -1,0 +1,20 @@
+you can download the tortoiseSVN from the following locaiton: 
+
+
+
+http://tortoisesvn.net/
+
+the latest version up todate is "1.8.3"
+
+
+http://tortoisesvn.net/downloads.html
+
+
+but that has been blocked, you can try this site: 
+
+http://www.visualsvn.com/visualsvn/download/tortoisesvn/
+
+
+you can donwload other tools from this site:
+
+
